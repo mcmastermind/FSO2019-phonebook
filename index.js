@@ -9,6 +9,8 @@ morgan.token('post-request', (req,res) => { return JSON.stringify(req.body) })
 
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :post-request'))
 
+app.use(express.static('build'))
+
 let persons = [
     {
         "name": "Arto Hellas",
@@ -83,7 +85,7 @@ const unknownEndpoint = (request, response) => {
 app.use(unknownEndpoint)
 
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
