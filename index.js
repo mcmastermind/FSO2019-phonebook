@@ -7,14 +7,14 @@ const Person = require('./models/person')
 
 app.use(bodyParser.json())
 
-morgan.token('post-request', (req,res) => { return JSON.stringify(req.body) })
+morgan.token('post-request', (req) => { return JSON.stringify(req.body) })
 
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :post-request'))
 
 app.use(express.static('build'))
 
 // get phonebook info
-app.get('/info', (req, res) => {
+app.get('/info', (req, res, next) => {
     Person.find({})
         .then(persons => {
             res.send(`Phonebook has info for ${persons.length} peope.<br/><br/>${new Date()}`)
@@ -43,7 +43,7 @@ app.get('/api/persons/:id', (req, res, next ) => {
 app.delete('/api/persons/:id', (req, res, next) => {
     Person.findByIdAndRemove(req.params.id)
         .then(mDBresponse => {
-            console.log('deleted successfully')
+            console.log('deleted successfully', mDBresponse)
             res.status(204).end()
         })
         .catch(error => next(error))
